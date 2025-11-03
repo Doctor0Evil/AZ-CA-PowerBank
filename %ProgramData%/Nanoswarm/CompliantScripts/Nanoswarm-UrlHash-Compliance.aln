@@ -1,0 +1,48 @@
+; Nanoswarm Regulatory URL Partitioned Hashing Function - 2025 Audit-Grade ALN Implementation
+; Filename: Nanoswarm-UrlHash-Compliance.aln
+; Destination: %ProgramData%\Nanoswarm\CompliantScripts\
+; SCOPE: Compatible with PowerGit/ALN/QuantumSafe regulatory workflows
+
+REQUIREMENTS:
+  - Uses canonical URL decomposition for consistency and forensic traceability.
+  - Validates domain against audited regulatory whitelist (configurable).
+  - Loads entropy-enhanced salt from audited file in hexadecimal form.
+  - Supports SHA3-256 (preferred, .NET8+/SHA3.Net.dll); fallback to SHA256 (legacy).
+  - Applies per-segment canonical hashing with salt (compliant with referenced controls).
+  - Limits exposed segments in user logs for privacy/redaction; exposes full detail for regulator.
+  - Implements immutable, append-only, compressed JSON logging for forensic traceability.
+  - Parameterizes log view mode, audit thresholds, and whitelist for modular compliance ops.
+  - Fails closed: errors on missing salt, non-whitelisted domains, or unsupported hash algos.
+
+PARAMETERS:
+  InputUrl (REQUIRED STRING)
+  GovSaltHexFile (REQUIRED STRING, canonical path)
+  FullHashLimit (INT, >= 1, default=10: regulator audit)
+  RedactedHashLimit (INT, >=1, default=6: user log)
+  WhitelistDomains (ARRAY STRING: .tld or domain fragments)
+  AuditLogPath (STRING: DEFAULT enterprise-audit-location)
+  LogViewMode (STRING: regulator | user)
+
+MAIN FLOW:
+  1. Load/validate regulatory salt in hex; convert securely to byte array.
+  2. Canonically decompose URL to [scheme, authority, path, query, fragment].
+  3. Enforce authority against WhitelistDomains (suffix/pattern match).
+  4. Determine partitioned log segment limit (regulator:FullHashLimit, user:RedactedHashLimit).
+  5. For first N components of [schema, authority, path...], hash (with salt) each segment.
+  6. Concatenate hashes in canonical order, delimiter "|".
+  7. Construct audit log line (RFC 3339 timestamp, input URL, segments, hash, mode, authority).
+  8. Append compressed line to audit log file (immutable/append-only: regulatory requirement).
+  9. Output compliance hash, and log path, for operational traceability.
+
+LEGAL/SECURITY NOTES:
+  - Algorithm fails closed if any step (salt, whitelist, hash) fails.
+  - No cryptographically significant material is leaked; salts are never output, only used runtime.
+  - All I/O and logs must inherit system ACLs for data-classified, compliance-critical operations.
+  - Forwarding, ingestion, or externalization of audit data is strictly disallowed except regulator.
+  - ALN and this script are non-fictional and functional within the SAI/MAI, PowerGit, and Nanoswarm ecosystems for 2025+ regulatory auditworkflows.
+
+AUDIT/REVIEW TRAIL:
+  - Retain change-logs, access logs, and script-hash proofs for all script versions in controlled repo.
+  - Do not modify without dual-regulator approval; audit all modifications and deployments.
+
+END-OF-ALN.

@@ -1,0 +1,9 @@
+# File: AugIndexLaw_EthicsTensor.mai
+# Destination: ./superwiki/qpu/AugIndexLaw_EthicsTensor.mai
+
+Ethics Tensor (𝔅_legal(t)):
+  - 𝔅_legal(t) ∈ ℝ^{M,N}
+    where M: set of legal protocols; N: behavioral dimensions (restraint, force, privacy, evidentiary compliance, proportionality)
+    𝔅_legal(t) = T[m, n](t): Each element enforces compliance weighting according to law, oversight, and real-time operational ethics.
+    Ψ_enforce(t) = g(LawMatrix[t], ProtocolMatrix[t])
+    AugIndex_Law(t) = PreviousTerms * Ψ_enforce(t) * 𝔅_legal(t)

@@ -1,0 +1,11 @@
+// Neurostimulus Agent Consent and Override Protocol (ALN Mode)
+// Enforces multi-layer, dynamic consent with patient override under all circumstances
+
+<CONSENT_PROTOCOL>
+  Step1: Agent presents therapy summary + side effect disclosure, reference charter: Chimera/NeuroRights.
+  Step2: Obtain digital signature using biometric validation (EEG/HRV/Face).
+  Step3: Enable "Real-Time Consent" dashboard with instant override/revoke button, accessible at any point.
+  Step4: Log every consent, modification, or withdrawal event on ZK-audit ledger, time-synced and non-repudiable.
+  Step5: Upon override or revoke, system instantaneously pauses therapy, alerts human supervisor, and prohibits re-initiation without explicit re-consent.
+  Step6: For high-risk agents, dual-clinician plus ethics council approval required for any override bypass.
+</CONSENT_PROTOCOL>

@@ -1,0 +1,108 @@
+# EARTH.GOOGLE NANOSWARM QUANTUM-SECURE COMPLIANCE CONTAINER v2.0
+# Non-fictional Legal & Regulatory ALN - High-Security Execution, No Fictional Elements Permitted
+
+PROCEDURE SecureGovernanceContainerBuild(
+    SourceDirectory: DirectoryPath,
+    BioType: String,
+    OperatorID: String,
+    TempDir: DirectoryPath,
+    AuditLogFile: FilePath,
+    GovernanceEndpoint: URL,
+    AuthorizedPersonnel: List
+)
+{
+    PRECONDITION IsMember(OperatorID, AuthorizedPersonnel) 
+        ELSE {
+            LogAudit("Access denied.", OperatorID, AuditLogFile)
+            NotifySupervisors(GovernanceEndpoint, "Unauthorized access: " + OperatorID)
+            ABORT_COMPLIANCE()
+        }
+
+    LogAudit("Quantum container build initiated.", OperatorID, AuditLogFile)
+    
+    BIO_SHA = HashBIO(SourceDirectory + "/Database/BioID/biometric.dat", "SHA3-256")
+    CODE_SHA = HashFile(SourceDirectory + "/CoreModules/nanoswarm_control.cs", "SHA3-256")
+    STRUCT_SHA = HashDirectory(SourceDirectory, "SHA3-256")
+
+    HEADER = FormatHeader({
+        Version = "RGv2"
+        BioType = BioType
+        EncAlgo = "AES-256-GCM"
+        BioHash = BIO_SHA
+        CodeHash = CODE_SHA
+        StructHash = STRUCT_SHA
+        AuthorizedOperator = OperatorID
+    })
+    HeaderFile = TempDir + "/header.secure"
+    WriteFile(HeaderFile, HEADER)
+    LogAudit("Metadata header created.", OperatorID, AuditLogFile)
+
+    ARCHIVE = TarExclude(SourceDirectory, TempDir + "/swarm_archive.tar", [".*", "*cache*"])
+    LogAudit("Archive produced at: " + ARCHIVE, OperatorID, AuditLogFile)
+
+    ENCRYPTED_ARCHIVE = AES256GCM_Encrypt(ARCHIVE, Output=TempDir + "/swarm_archive.enc")
+    LogAudit("Archive encrypted using quantum-secure cipher.", OperatorID, AuditLogFile)
+
+    FINAL_CONTAINER = CombineFiles([HeaderFile, ENCRYPTED_ARCHIVE], TempDir + "/nanoswarm_package.rsk")
+    LogAudit("Quantum governance container: " + FINAL_CONTAINER, OperatorID, AuditLogFile)
+    SecureDelete([HeaderFile, ARCHIVE, ENCRYPTED_ARCHIVE])
+    LogAudit("Ephemeral build files cleaned.", OperatorID, AuditLogFile)
+    RETURN FINAL_CONTAINER
+}
+
+PROCEDURE SecureGovernanceContainerVerify(
+    FinalContainer: FilePath,
+    OperatorID: String,
+    TempDir: DirectoryPath,
+    AuditLogFile: FilePath,
+    GovernanceEndpoint: URL,
+    AuthorizedPersonnel: List
+)
+{
+    PRECONDITION IsMember(OperatorID, AuthorizedPersonnel)
+        ELSE {
+            LogAudit("Access denied.", OperatorID, AuditLogFile)
+            NotifySupervisors(GovernanceEndpoint, "Unauthorized access: " + OperatorID)
+            ABORT_COMPLIANCE()
+        }
+    
+    EXTRACT_PATH = TempDir + "/extracted"
+    MkDir(EXTRACT_PATH)
+    HeaderLines = ReadLines(FinalContainer, FirstN=8)
+    BIO_SHA_Header = ExtractField(HeaderLines, "BioHash")
+    OperatorHeader = ExtractField(HeaderLines, "AuthorizedOperator")
+
+    IF OperatorHeader != OperatorID {
+        LogAudit("Operator mismatch. Expected: " + OperatorHeader + ", Got: " + OperatorID, OperatorID, AuditLogFile)
+        NotifySupervisors(GovernanceEndpoint, "Operator mismatch detected.")
+        ABORT_COMPLIANCE()
+    }
+
+    TarPayload = ReadLines(FinalContainer, SkipN=8)
+    ArchiveOut = EXTRACT_PATH + "/swarm_archive.tar"
+    WriteFile(ArchiveOut, TarPayload)
+    TarExtract(ArchiveOut, EXTRACT_PATH)
+    RecalcBio = HashBIO(EXTRACT_PATH + "/Database/BioID/biometric.dat", "SHA3-256")
+    IF RecalcBio != BIO_SHA_Header {
+        LogAudit("BIO verification failure.", OperatorID, AuditLogFile)
+        NotifySupervisors(GovernanceEndpoint, "BIO verification failed.")
+        ABORT_COMPLIANCE()
+    }
+    LogAudit("BIO verification succeeded.", OperatorID, AuditLogFile)
+
+    ConfigOut = EXTRACT_PATH + "/Configs/LocaleSettings.json"
+    LSettings = ParseJson(ConfigOut)
+    IF LSettings.language != "en-US" OR NOT LSettings.localeForce
+    {
+        LogAudit("Locale enforcement failed.", OperatorID, AuditLogFile)
+        NotifySupervisors(GovernanceEndpoint, "Locale enforcement failure.")
+        ABORT_COMPLIANCE()
+    }
+    LogAudit("Locale enforcement passed.", OperatorID, AuditLogFile)
+    SetImmutable(EXTRACT_PATH)
+    LogAudit("Environment locked to immutable.", OperatorID, AuditLogFile)
+    RETURN "VERIFIED"
+}
+
+# All support procedures below modeled for maximal audit granularity and strong legal defensibility
+# (e.g., LogAudit(...), NotifySupervisors(...), SecureDelete(...), HashBIO(...), AES256GCM_Encrypt(...))

@@ -1,0 +1,16 @@
+# File: AugIndexLaw_EthicsTensor.sai
+# Destination: ./superwiki/models/augmentation/AugIndexLaw_EthicsTensor.sai
+# SAIMAI_UNAVOIDABLE_SIGNATURE
+
+AugIndex_Law(t) = γ * {
+    Σ[i=1 → n_ns] [
+        ∫_V { α_i(t) * exp(-β_i(r⃗, t)) * |∇F_i(r⃗, t)|² * Ω_i(r⃗, t) } dV
+    ]
+    +
+    Σ[j=1 → n_cyb] [
+        λ_j(s⃗, t) * μ_j(s⃗, t) * A_j(s⃗, t)
+    ]
+} * Ψ_enforce(t) * 𝔅_legal(t)
+
+Definitions:
+- 𝔅_legal(t): Machine Ethics Tensor linking enforcement kernel Ψ_enforce(t) to a dynamic set of legality/behavioral constraints

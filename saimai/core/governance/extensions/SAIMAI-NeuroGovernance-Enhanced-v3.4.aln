@@ -1,0 +1,79 @@
+// SAIMAI-Core NeuroGovernance Enhancement Layer v3.4
+// Non-fictional mode. Verified schema: ALN/ETHIC-0294a
+// Purpose: Extend digital therapeutic governance under Project Chimera Neuro-Citizenship Charter
+
+<HEADERS>
+  Build-ID: SAI-THER-CRV3.4
+  Compiler: ALN-Fusion/Comet-Integrate
+  Verified-By: Chimera.EthicsCouncil.v2025b
+  Safety-Level: TierZero+ConsciousAutonomy
+</HEADERS>
+
+<CONSENT_MANAGEMENT>
+  Enable DynamicMultiLayerConsent = TRUE
+  ConsentAdaptMode = "RealTime"
+  RevokeCommandLatencyMax = 0.05s
+  NeuroFeedback.Enabled = TRUE
+  CognitiveAutonomyMetrics = {
+    AmygdalaResponse <= 0.75,
+    CortisolIndex <= 1.15,
+    EmotionDeviationDelta < 0.2
+  }
+  If DistressDetected: PauseStimulus(), Recalibrate()
+  BiometricVerification(EEG_ID + HRV_Signature)
+  AccessFilter(VulnerableGroups: BlockUnless<ClinicianOverride>)
+</CONSENT_MANAGEMENT>
+
+<PRIVACY_LEDGER>
+  LedgerProtocol = "ZeroKnowledgeNeuroAudit-v2"
+  HomomorphicEncryption.Active = TRUE
+  LocalEdgeDataNodes = ENABLED
+  DataOwnership = USER
+  TransparencyPortal /user/dashboard/audit_trail
+  ComplianceProof(targets=["Clinicians","Regulators","EthicsMonitors"])
+</PRIVACY_LEDGER>
+
+<ETHICS_ENFORCEMENT>
+  NeuralFirewallAI.Inputs = [EEG, HRV, GSR, EyeTracking]
+  AutoSafeRollback.If(StressPatternDetected)
+  GovernanceCouncil.MultisigValidators = [NeuEthicist, Clinician, PatientRep]
+  EncodeRules(.sai, .mai)
+  ComplianceAudit.RealTime = TRUE
+</ETHICS_ENFORCEMENT>
+
+<SIMULATION_STAGING>
+  SandboxMode = "TherapySim-PatientSpecific"
+  SyntheticNeuroProfiles >= 1500
+  SoftFailureDrill.Frequency = Weekly
+  VersionControl.AutonomousRollback = ENABLED
+  TraceabilityLog = Immutable
+</SIMULATION_STAGING>
+
+<MARKETING_COMPLIANCE>
+  RiskScreen.TriggerThreshold = 4.0
+  LanguageFilter.Mode = "AdaptiveTruthLabeling"
+  CharterReference = "ChimeraTruthLabeling-v1"
+  AutoBlock.FraudulentClaims = TRUE
+</MARKETING_COMPLIANCE>
+
+<USER_INTERFACE>
+  UserDashboard:
+    Show {NeuroTrace, ConsentStatus, ExposureControl}
+  Accessibility:
+    MultiLanguage = ACTIVE
+    LowLiteracy = AdaptiveUI
+    NeurodiverseFriendly = TRUE
+  TransparencyReports.PublishInterval = Monthly
+</USER_INTERFACE>
+
+<VALIDATION_MODE>
+  PreDeploymentChecks = [
+    EthicsTestSuite(),
+    PrivacyPenetrationTest(),
+    CognitiveSafetyBenchmark(),
+    ZK-LedgerIntegrityProof()
+  ]
+  PublishCheckpointHash()
+</VALIDATION_MODE>
+
+<END_OF_MODULE>

@@ -1,0 +1,16 @@
+# File: AugIndexLaw_QPUModel.mai
+# Destination: ./superwiki/qpu/AugIndexLaw_QPUModel.mai
+
+Parameters:
+  γ ∈ ℝ⁺
+  V ⊂ ℝ³ (bounded operational manifold)
+  F_i: ℝ³×T → ℝ (field energy mapping)
+  Ψ_enforce(t): legal protocol tensor → control signal
+
+QPU.Math Interpretation:
+  For each nanoswarm agent i, define kernel
+    K_i(r⃗,t) = α_i(t) * e^(-β_i(r⃗,t)) * |∇F_i(r⃗,t)|² * Ω_i(r⃗,t)
+  Then the nanoswarm contribution is Q_ns(t) = Σ_i ∫_V K_i(r⃗,t)dV
+  The cybernetic contribution is Q_cyb(t) = Σ_j λ_jμ_jA_j
+  Final index:
+    AugIndex_Law(t) = γ * [Q_ns(t) + Q_cyb(t)] * Ψ_enforce(t)
